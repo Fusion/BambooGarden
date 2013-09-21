@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="@dimen/height_list">
+
+    <LinearLayout
+        android:id="@+id/back"
+        android:tag="back"
+        style="@style/ListBackContent"
+        >
+
+        <com.voilaweb.mobile.bamboogarden.BambooActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delete_book_button"
+            style="@style/ListButtonAction"
+            android:text="@string/deletebookbutton"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/front"
+        android:tag="front"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/list_card"
+        >
+
+        <ImageView
+            android:id="@+id/result_item_icon"
+            android:layout_height="@dimen/rbm_item_image_height"
+            android:layout_width="@dimen/rbm_item_image_width"
+            android:scaleType="fitCenter"
+            />
+
+        <TextView
+            android:id="@+id/bamboo_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@+id/result_item_icon"
+            style="@style/ListTitle"
+            android:singleLine="true"
+            android:ellipsize="end"/>
+
+    </RelativeLayout>
+
+</FrameLayout>
+

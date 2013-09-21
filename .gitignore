@@ -1,0 +1,8 @@
+local.properties
+ReversedBamboo
+.idea
+.svn
+gen/
+libs/
+obj/
+out/

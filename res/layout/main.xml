@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <com.voilaweb.mobile.bamboogarden.InputLinearLayout
+        android:id="@+id/inputpane"
+        android:tag="back"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_width="match_parent"
+        android:background="#FFE5E5E5"
+        style="@style/PaneBackContent"
+        >
+        <com.voilaweb.mobile.bamboogarden.BambooEdit
+            android:id="@+id/bamboonameedit"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            />
+        <Button
+            android:id="@+id/bamboonameadd"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="add"
+            />
+    </com.voilaweb.mobile.bamboogarden.InputLinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/mainpane"
+        android:tag="front"
+        android:layout_below="@+id/inputpane"
+        style="@style/PaneFrontContent">
+
+        <com.voilaweb.mobile.bamboogarden.QuickHandle android:id="@+id/panehandle"
+                                           android:layout_width="match_parent"
+                                           android:layout_height="64dp" />
+        <com.voilaweb.mobile.bamboogarden.BambooListView
+            xmlns:swipe="http://schemas.android.com/apk/res-auto"
+            android:background="#FF0000"
+            android:id="@+id/bamboolistview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            swipe:swipeFrontView="@+id/front"
+            swipe:swipeBackView="@+id/back"
+            swipe:swipeActionLeft="reveal"
+            swipe:swipeActionRight="reveal"
+            swipe:swipeOpenOnLongPress="false" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+

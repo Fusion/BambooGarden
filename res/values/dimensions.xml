@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="rbm_menu_width">200dp</dimen>
+
+    <dimen name="rbm_item_padding_topbottom">16dp</dimen>
+    <dimen name="rbm_item_padding_leftright">8dp</dimen>
+
+    <dimen name="rbm_item_image_height">24dp</dimen>
+    <dimen name="rbm_item_image_width">24dp</dimen>
+
+    <dimen name="rbm_item_text_size">16sp</dimen>
+    <dimen name="rbm_item_text_padding_left">10dp</dimen>
+
+    <dimen name="rbm_item_text_width">152sp</dimen>
+
+    <dimen name="rbm_tip_text_size">64sp</dimen>
+
+    <!-- -->
+
+    <dimen name="rbm_expanded_item_padding_topbottom">16dp</dimen>
+    <dimen name="rbm_expanded_item_padding_leftright">8dp</dimen>
+
+    <!--  -->
+
+    <dimen name="empty">0dp</dimen>
+    <dimen name="rbm_item_text_width_empty">128sp</dimen>
+
+    <!--  -->
+
+    <dimen name="rbm_quick_width">32dp</dimen>
+
+    <dimen name="rbm_quick_padding_topbottom">1dp</dimen>
+    <dimen name="rbm_quick_padding_leftright">1dp</dimen>
+
+    <dimen name="rbm_quick_text_size">16sp</dimen>
+    <dimen name="rbm_quick_text_padding_left">1dp</dimen>
+
+    <!--  -->
+
+    <dimen name="height_list">90dp</dimen>
+    <dimen name="padding_default">0dp</dimen>
+    <dimen name="size_list_image">64dp</dimen>
+    <dimen name="font_size_title">17sp</dimen>
+    <dimen name="font_size_description">15sp</dimen>
+
+</resources>

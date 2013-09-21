@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_app">#dedede</color>
+
+    <color name="background_list_back">#e3e3e3</color>
+    <color name="background_list_front">#ffffff</color>
+    <color name="text_title">#444444</color>
+    <color name="text_description">#7e7e7e</color>
+
+    <color name="line">#ffbcbcbc</color>
+
+    <color name="rbm_menu_background">#303030</color>
+    <color name="rbm_item_text_color">#cfcfcf</color>
+    <color name="rbm_quick_background">#111111</color>
+    <color name="rbm_quick_text_color">#ffffff</color>
+    <color name="rbm_headers_color">#33b5e5</color>
+    <color name="tour_text_color">#333333</color>
+    <color name="rbm_hole_background">#000000</color>
+    <color name="credits_text_color">#666666</color>
+    <color name="debug_color">#ff7733</color>
+
+    <color name="color01">#FFDF7E29</color>
+    <color name="color02">#FFBA352F</color>
+    <color name="color06">#FF407EB8</color>
+    <color name="color08">#FF3C4C61</color>
+    <color name="color09">#FFBEC3C7</color>
+    <color name="color10">#FFECF0F1</color>
+<!--
+    <color name="color_front_pane">#FFDF4840</color>
+    <color name="color_list_back_content">#FF808C8D</color>
+    <color name="color_list_front_content">#FF96A5A6</color>
+    <color name="color_keyboard">#FF4E96DA</color>
+-->
+    <color name="color_front_pane">#FFFFFFFF</color>
+    <color name="color_text_pane">#FFCD0074</color>
+    <color name="color_list_back_content">#FFE5E5E5</color>
+    <color name="color_list_front_content">#FFFFFFFF</color>
+    <color name="color_keyboard">#FF4E96DA</color>
+    <color name="color_handle_back_content">#FFE5E5E5</color>
+
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BambooGarden</string>
+
+    <string name="deletebookbutton">Delete</string>
+    <string name="two">nothing yet</string>
+    <string name="three">nothing yet</string>
+
+</resources>
