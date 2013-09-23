@@ -60,3 +60,35 @@ A somewhat more expedient way to test your modifications is:
 
 3. Keep testing your application: you just hot-swapped your root code!
 
+## What about JNI?
+
+So, Java is great and all but Java 6 having its own limitations, you may wish to add some native library code to it.
+
+Simple: follow the same steps you would when writing non-root native code.
+
+Only one difference: when loading your native library, use `System.load()` rather than `System.loadLibrary()` and prefix the library path with the current working directory.
+
+For instance:
+
+    static {
+        System.load(System.getProperty("user.dir") + "/lib/libtinylib.so");
+    }
+
+*How come this is my current working directory?*
+
+It is because you told RootTools to make that happen using the new shell command: `useCWD(Context)`
+
+If you look at `initBamboo()`'s source code, you will see:
+
+    try {
+        Shell shell = RootTools.getShell(true);
+        shell.useCWD(this);
+        
+meaning that from now on all commands you run using that shell will be executed in your application's data directory rather than your device's root.
+
+## Your code is not properly licensed!
+
+Yes it is. Oh, wait. You mean it does not include the proper acknowledgments for RootTools itself as well as 47 Degree's SwipeListView.
+ 
+You're right. I need to get around to doing it. Note that the app doesn't even have an 'About' box at this point :/
+
