@@ -97,17 +97,17 @@ public class RootHelper {
 
     private boolean exportExistingBambooList() {
         CLog.log("RootHelper:exportExistingBambooList()");
+        String activeFileName = getActiveFileName();
         File[] bambooFiles = new File(DBPATH).listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
-                return !filename.endsWith("-journal");
+                return !filename.endsWith("-journal") && !filename.equals("book");
             }
         });
         System.out.println("OK");
         for(File bambooFile:bambooFiles) {
-            if(bambooFile.getName().equals("book"))
-                continue;
-            System.out.println(bambooFile.getName());
+            String name = bambooFile.getName();
+            System.out.println(name + "," + (activeFileName.equals(name) ? "true" : "false"));
         }
         return true;
     }
@@ -133,6 +133,7 @@ public class RootHelper {
         copyFile(System.getProperty("user.dir") + "/files/book-journal", dbName + "-journal");
 
         /*
+         * Leaving this here for reference...
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
         if(db == null)
             return error("Unable to create database.");
@@ -237,19 +238,13 @@ public class RootHelper {
 
 
     /* Quick adaption of Apache common.io.FileUtils's implementation for Java < 7 */
-    protected static boolean isSymlink(File file) throws IOException {
+    protected boolean isSymlink(File file) throws IOException {
         if (file == null) {
-            throw new NullPointerException("File must not be null");
+            throw new NullPointerException("File may not be null");
         }
         boolean symlink = false;
 
-        File fileInCanonicalDir;
-        if (file.getParent() == null) {
-            fileInCanonicalDir = file;
-        } else {
-            File canonicalDir = file.getParentFile().getCanonicalFile();
-            fileInCanonicalDir = new File(canonicalDir, file.getName());
-        }
+        File fileInCanonicalDir = getFileInCanonicalDir(file);
         if (fileInCanonicalDir.getCanonicalFile().equals(fileInCanonicalDir.getAbsoluteFile())) {
             symlink = false;
         } else {
@@ -257,6 +252,30 @@ public class RootHelper {
         }
 
         return symlink;
+    }
+
+
+    private String getActiveFileName() {
+        String activeFileName = "";
+        File defaultFile = new File(DBPATH + File.separator + "book");
+        try {
+            activeFileName = getFileInCanonicalDir(defaultFile).getCanonicalFile().getName();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return activeFileName;
+    }
+
+
+    protected File getFileInCanonicalDir(File file) throws IOException {
+        File fileInCanonicalDir;
+        if (file.getParent() == null) {
+            fileInCanonicalDir = file;
+        } else {
+            File canonicalDir = file.getParentFile().getCanonicalFile();
+            fileInCanonicalDir = new File(canonicalDir, file.getName());
+        }
+        return fileInCanonicalDir;
     }
 
 

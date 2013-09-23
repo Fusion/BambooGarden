@@ -1,6 +1,7 @@
 package com.voilaweb.mobile.bamboogarden;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,22 @@ public class GardenAdapter extends ArrayAdapter<BambooInfo> {
 
 
     @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        int type = 0;
+        BambooInfo info = getItem(position);
+        if(info.isActive())
+            type = 1;
+        return type;
+    }
+
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final BambooViewHolder holder;
         if(convertView == null) {
@@ -65,6 +82,13 @@ public class GardenAdapter extends ArrayAdapter<BambooInfo> {
         BambooInfo info = getItem(position);
         holder.nameView.setText(info.getName());
         holder.position = position;
+
+        if(getItemViewType(position) == 0) {
+            holder.nameView.setTypeface(holder.nameView.getTypeface(), Typeface.NORMAL);
+        }
+        else {
+            holder.nameView.setTypeface(holder.nameView.getTypeface(), Typeface.BOLD_ITALIC);
+        }
 
         return convertView;
     }

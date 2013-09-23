@@ -39,7 +39,12 @@ public class Garden extends Activity implements BambooMessages {
             else if(action.equals(BROADCAST_ITEMCLICK)) {
                 int position = intent.getIntExtra("position", -1);
                 if(position != -1) {
-                    confirmSwitchToBook(position);
+                    if(mGardenAdapter.getItem(position).isActive()) {
+                        maybeOpenBamboo();
+                    }
+                    else {
+                        confirmSwitchToBook(position);
+                    }
                 }
             }
         }
@@ -92,7 +97,8 @@ public class Garden extends Activity implements BambooMessages {
                                 editField.getText()
                                         .toString()
                                         .replaceAll("[^A-Za-z0-9_\\s]+", "")
-                                        .replaceAll("[\\s]+", "_")));
+                                        .replaceAll("[\\s]+", "_"),
+                                false));
             }
         });
     }
@@ -100,6 +106,7 @@ public class Garden extends Activity implements BambooMessages {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         forgetReceiver();
     }
 
@@ -109,17 +116,7 @@ public class Garden extends Activity implements BambooMessages {
     }
 
 
-    // -----------------------
-    // -----------------------
-    // TODO NO! Instead,simply get list using RootHelper.
-    // -----------------------
-    // -----------------------
     private GardenAdapterList getAllBamboos(final GardenListCallable callback) {
-        /*
-        GardenAdapterList list = (GardenAdapterList)StorageHelper.instance(this).unshelve("bamboos", true);
-        if(list == null)
-            list = new GardenAdapterList();
-        */
         final GardenAdapterList list = new GardenAdapterList();
         try {
             Shell shell = RootTools.getShell(true);
@@ -135,7 +132,8 @@ public class Garden extends Activity implements BambooMessages {
                     super.commandOutput(id, line);
                     CLog.log("INNER RootHelper says: " + line);
                     if(valid) {
-                        list.add(new BambooInfo(line.trim()));
+                        String[] info = line.trim().split(",");
+                        list.add(new BambooInfo(info[0], info[1].equals("true")));
                     }
                     else if(line.equals("OK")) {
                         valid = true;
@@ -180,7 +178,6 @@ public class Garden extends Activity implements BambooMessages {
                         @Override
                         public void run() {
                             resetEditField();
-                            //StorageHelper.instance(Garden.this).shelve("bamboos", list);
                             mGardenAdapter.setAllValues(list); // Brutal, I know
                         }
                     });
@@ -255,10 +252,10 @@ public class Garden extends Activity implements BambooMessages {
 
     private void confirmDeleteBook(final int position) {
         final BambooInfo bamboo = mGardenAdapter.getItem(position);
-        if(bamboo.getName().equals("default")) {
+        if(bamboo.isActive()) {
             AlertDialog.Builder ab = new AlertDialog.Builder(Garden.this);
             ab.setTitle("Oh no you didn't.")
-                    .setMessage("You are trying to delete the default notebook. I cannot let you do that. It's for your own good. Trust me.")
+                    .setMessage("You are trying to delete the active notebook. I cannot let you do that. It's for your own good. Trust me.")
                     .setNeutralButton("Oh all right then.", null);
             ab.create().show();
         }
@@ -377,27 +374,7 @@ public class Garden extends Activity implements BambooMessages {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                AlertDialog.Builder ab = new AlertDialog.Builder(Garden.this);
-                                ab.setTitle("Open")
-                                        .setMessage("Do you wish to open Bamboo now?")
-                                        .setNegativeButton("No", null)
-                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Intent launchIntent = new Intent();
-                                                launchIntent.setComponent(
-                                                        new ComponentName(
-                                                                "com.wacom.bamboopaper",
-                                                                "com.wacom.bamboopaperforsamsung.BambooPaperForSamsungActivity"));
-                                                startActivity(launchIntent);
-                                            }
-                                        });
-
-                                ab.create().show();
-
-                                Toast.makeText(Garden.this,
-                                        "OK I tried. I am too lazy to check whether it worked, though.",
-                                        Toast.LENGTH_SHORT).show();
+                                maybeOpenBamboo();
                             }
                         });
                         refreshBambooGarden();
@@ -410,6 +387,27 @@ public class Garden extends Activity implements BambooMessages {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    private void maybeOpenBamboo() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(Garden.this);
+        ab.setTitle("Open")
+                .setMessage("Do you wish to open Bamboo now?")
+                .setNegativeButton("No", null)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent launchIntent = new Intent();
+                        launchIntent.setComponent(
+                                new ComponentName(
+                                        "com.wacom.bamboopaper",
+                                        "com.wacom.bamboopaperforsamsung.BambooPaperForSamsungActivity"));
+                        startActivity(launchIntent);
+                    }
+                });
+
+        ab.create().show();
     }
 
 
