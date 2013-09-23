@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layout_root"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="horizontal"
+              android:padding="8dp" >
+
+    <!-- The purpose of this layout is adding a checkbox to a system dialog.
+         Inflating the checkbox alone rather than a whole custom
+         dialog layout allows me to make zero assumption about
+         the system's dialogs -->
+    <CheckBox
+        android:id="@+id/a_a_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(?)" >
+    </CheckBox>
+
+</LinearLayout>

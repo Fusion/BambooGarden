@@ -26,6 +26,7 @@ public class RootHelper {
     }
 
     public RootHelper(RootClass.RootArgs args) {
+        CLog.log("RootHelper invoked for BambooGarden app");
         if(args.args.length > 0) {
             if(args.args[0].equals("init")) {
                 try {
@@ -65,6 +66,7 @@ public class RootHelper {
 
 
     private boolean initBamboo() throws IOException {
+        CLog.log("RootHelper:initBamboo()");
         File defaultFile = new File(DBPATH + File.separator + "book");
         try {
             if(!isSymlink(defaultFile)) {
@@ -94,6 +96,7 @@ public class RootHelper {
 
 
     private boolean exportExistingBambooList() {
+        CLog.log("RootHelper:exportExistingBambooList()");
         File[] bambooFiles = new File(DBPATH).listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
@@ -156,6 +159,7 @@ public class RootHelper {
 
 
     private boolean deleteDatabase(String name) {
+        CLog.log("RootHelper:deleteDatabase()");
         String dbName = DBPATH + name;
         File dbFile = new File(dbName);
         if(dbFile.exists()) {
@@ -170,6 +174,7 @@ public class RootHelper {
 
 
     private boolean switchBamboo(String name) throws IOException {
+        CLog.log("RootHelper:switchBamboo()");
         // delete symlinks recreate symlinks
         String dbName = DBPATH + "book";
         File dbFile = new File(dbName);

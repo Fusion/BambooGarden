@@ -6,6 +6,8 @@ import android.content.*;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.execution.JavaCommandCapture;
@@ -93,6 +95,12 @@ public class Garden extends Activity implements BambooMessages {
                                         .replaceAll("[\\s]+", "_")));
             }
         });
+    }
+
+
+    @Override
+    public void onDestroy() {
+        forgetReceiver();
     }
 
 
@@ -215,7 +223,12 @@ public class Garden extends Activity implements BambooMessages {
     }
 
 
-    private void createNewBamboo(BambooInfo bamboo) {
+    private void forgetReceiver() {
+        unregisterReceiver(mReceiver);
+    }
+
+
+    private void createNewBamboo(final BambooInfo bamboo) {
         try {
             Shell shell = RootTools.getShell(true);
             JavaCommandCapture cmd = new JavaCommandCapture(
@@ -266,7 +279,7 @@ public class Garden extends Activity implements BambooMessages {
     }
 
 
-    private void deleteBamboo(BambooInfo bamboo) {
+    private void deleteBamboo(final BambooInfo bamboo) {
         if(bamboo != null) {
             try {
                 Shell shell = RootTools.getShell(true);
@@ -300,23 +313,44 @@ public class Garden extends Activity implements BambooMessages {
 
 
     private void confirmSwitchToBook(final int position) {
-        AlertDialog.Builder ab = new AlertDialog.Builder(Garden.this);
-        ab.setTitle("Switch to book")
-                .setMessage("Do you wish to switch to this notebook?\n"
-                + "Note: I will stop Bamboo first to avoid confusing it.")
-                .setNegativeButton("No", null)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switchToBook(mGardenAdapter.getItem(position));
-                    }
-                });
+        final String PREFERENCES = getApplicationContext().getPackageName();
+        final String DONOTSHOWSWITCHDIALOGAGAIN =
+                "com.voilaweb.mobile.bamboogarden.DO_NOT_SHOW_SWITCH_DIALOG_AGAIN";
+        final SharedPreferences prefs = getSharedPreferences(PREFERENCES, 0);
+        if(prefs.getBoolean(DONOTSHOWSWITCHDIALOGAGAIN, false) == true) {
+            switchToBook(mGardenAdapter.getItem(position));
+        }
+        else {
+            AlertDialog.Builder ab = new AlertDialog.Builder(Garden.this);
+            View dialogView = getLayoutInflater().inflate(R.layout.additional_action_checkbox, null);
+            ab.setView(dialogView);
+            final CheckBox doNotShowAgain = (CheckBox)dialogView.findViewById(R.id.a_a_checkbox);
+            doNotShowAgain.setText("Do not display again");
+            doNotShowAgain.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean(DONOTSHOWSWITCHDIALOGAGAIN, isChecked);
+                    editor.commit();
+                }
+            });
+            ab.setTitle("Switch to book")
+                    .setMessage("Do you wish to switch to this notebook?\n"
+                    + "Note: I will stop Bamboo first to avoid confusing it.")
+                    .setNegativeButton("No", null)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switchToBook(mGardenAdapter.getItem(position));
+                        }
+                    });
 
-        ab.create().show();
+            ab.create().show();
+        }
     }
 
 
-    private void switchToBook(BambooInfo bamboo) {
+    private void switchToBook(final BambooInfo bamboo) {
         if(bamboo != null) {
             // Kill Bamboo so that it doesn't get
             // all mixed up.
@@ -343,6 +377,24 @@ public class Garden extends Activity implements BambooMessages {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                AlertDialog.Builder ab = new AlertDialog.Builder(Garden.this);
+                                ab.setTitle("Open")
+                                        .setMessage("Do you wish to open Bamboo now?")
+                                        .setNegativeButton("No", null)
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent launchIntent = new Intent();
+                                                launchIntent.setComponent(
+                                                        new ComponentName(
+                                                                "com.wacom.bamboopaper",
+                                                                "com.wacom.bamboopaperforsamsung.BambooPaperForSamsungActivity"));
+                                                startActivity(launchIntent);
+                                            }
+                                        });
+
+                                ab.create().show();
+
                                 Toast.makeText(Garden.this,
                                         "OK I tried. I am too lazy to check whether it worked, though.",
                                         Toast.LENGTH_SHORT).show();
