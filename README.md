@@ -1,6 +1,6 @@
 ## What is this?
 
-This application allows you to create and pick between multiple notebooks when using Wacom’s Bamboo Paper.
+![](https://raw.github.com/Fusion/BambooGarden/master/res/drawable/icon.png) This application allows you to create and pick between multiple notebooks when using Wacom’s Bamboo Paper.
 Note that Bamboo Paper seems to be an exclusive for Samsung and as such behaves really poorly on other phones.
 
 This application is also the very first application using not just RootTools, but more specifically RootTools’ new Java interfaces that allow developers to write root applications entirely in Java.
