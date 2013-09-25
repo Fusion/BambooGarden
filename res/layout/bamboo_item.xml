@@ -17,6 +17,13 @@
             style="@style/ListButtonAction"
             android:text="@string/deletebookbutton"/>
 
+        <com.voilaweb.mobile.bamboogarden.BambooActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/color_book_button"
+            style="@style/ListButtonAction"
+            android:text="@string/colorbookbutton"/>
+
     </LinearLayout>
 
     <RelativeLayout
@@ -32,7 +39,7 @@
         >
 
         <ImageView
-            android:id="@+id/result_item_icon"
+            android:id="@+id/bamboo_item_icon"
             android:layout_height="@dimen/rbm_item_image_height"
             android:layout_width="@dimen/rbm_item_image_width"
             android:scaleType="fitCenter"
@@ -43,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_toRightOf="@+id/result_item_icon"
+            android:layout_toRightOf="@+id/bamboo_item_icon"
             style="@style/ListTitle"
             android:singleLine="true"
             android:ellipsize="end"/>

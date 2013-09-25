@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.*;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
+import com.larswerkman.colorpicker.ColorPicker;
+import com.larswerkman.colorpicker.OpacityBar;
+import com.larswerkman.colorpicker.SVBar;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.execution.JavaCommandCapture;
 import com.stericson.RootTools.execution.Shell;
@@ -33,6 +38,12 @@ public class Garden extends Activity implements BambooMessages {
                     int position = intent.getIntExtra("position", -1);
                     if(position != -1) {
                         confirmDeleteBook(position);
+                    }
+                }
+                else if(intent.getIntExtra("id", 0) == R.id.color_book_button) {
+                    int position = intent.getIntExtra("position", -1);
+                    if(position != -1) {
+                        displayColorPicker(position);
                     }
                 }
             }
@@ -98,7 +109,8 @@ public class Garden extends Activity implements BambooMessages {
                                         .toString()
                                         .replaceAll("[^A-Za-z0-9_\\s]+", "")
                                         .replaceAll("[\\s]+", "_"),
-                                false));
+                                false,
+                                -14895114));
             }
         });
     }
@@ -108,6 +120,32 @@ public class Garden extends Activity implements BambooMessages {
     public void onDestroy() {
         super.onDestroy();
         forgetReceiver();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_about:
+                displayAboutDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    private void displayAboutDialog() {
+        AboutDialog ad = new AboutDialog(this);
+        ad.setTitle("About Bamboo Garden");
+        ad.show();
     }
 
 
@@ -130,10 +168,9 @@ public class Garden extends Activity implements BambooMessages {
                 @Override
                 public void commandOutput(int id, String line) {
                     super.commandOutput(id, line);
-                    CLog.log("INNER RootHelper says: " + line);
                     if(valid) {
                         String[] info = line.trim().split(",");
-                        list.add(new BambooInfo(info[0], info[1].equals("true")));
+                        list.add(new BambooInfo(info[0], info[1].equals("true"), Integer.parseInt(info[2])));
                     }
                     else if(line.equals("OK")) {
                         valid = true;
@@ -142,6 +179,7 @@ public class Garden extends Activity implements BambooMessages {
 
                 @Override
                 public void commandCompleted(int id, int exitCode) {
+                    super.commandCompleted(id, exitCode);
                     callback.call(list);
                 }
             };
@@ -197,12 +235,6 @@ public class Garden extends Activity implements BambooMessages {
                     Garden.this,
                     "com.voilaweb.mobile.bamboogarden.RootHelper"
                     + " init") {
-
-                @Override
-                public void commandOutput(int id, String line) {
-                    super.commandOutput(id, line);
-                    CLog.log("RootHelper says: " + line);
-                }
             };
             shell.add(cmd);
         }
@@ -235,12 +267,6 @@ public class Garden extends Activity implements BambooMessages {
                     "com.voilaweb.mobile.bamboogarden.RootHelper"
                     + " create "
                     + bamboo.getName()) {
-
-                @Override
-                public void commandOutput(int id, String line) {
-                    super.commandOutput(id, line);
-                    CLog.log("RootHelper says: " + line);
-                }
             };
             shell.add(cmd);
         }
@@ -249,6 +275,59 @@ public class Garden extends Activity implements BambooMessages {
         }
     }
 
+
+    private void displayColorPicker(final int position) {
+        final BambooInfo bamboo = mGardenAdapter.getItem(position);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(Garden.this);
+        View dialogView = getLayoutInflater().inflate(R.layout.color_picker, null);
+        ab.setView(dialogView);
+
+        final ColorPicker picker = (ColorPicker)dialogView.findViewById(R.id.picker);
+        picker.addSVBar((SVBar)dialogView.findViewById(R.id.svbar));
+        picker.addOpacityBar((OpacityBar) dialogView.findViewById(R.id.opacitybar));
+        picker.setOldCenterColor(bamboo.getColor());
+        picker.setColor(bamboo.getColor());
+
+        ab.setTitle("Color")
+                .setMessage("Pick a new color for this notebook.")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        updateBambooColor(bamboo, picker.getColor());
+                    }
+                });
+        ab.create().show();
+
+    }
+
+
+    protected void updateBambooColor(BambooInfo bamboo, int color) {
+        try {
+            Shell shell = RootTools.getShell(true);
+            JavaCommandCapture cmd = new JavaCommandCapture(
+                    43,
+                    false,
+                    Garden.this,
+                    "com.voilaweb.mobile.bamboogarden.RootHelper"
+                            + " color "
+                            + bamboo.getName()
+                            + " " + color) {
+
+                @Override
+                public void commandCompleted(int id, int exitCode) {
+                    super.commandCompleted(id, exitCode);
+                    refreshBambooGarden();
+                }
+
+            };
+            shell.add(cmd);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void confirmDeleteBook(final int position) {
         final BambooInfo bamboo = mGardenAdapter.getItem(position);
@@ -289,13 +368,8 @@ public class Garden extends Activity implements BambooMessages {
                                 + bamboo.getName()) {
 
                     @Override
-                    public void commandOutput(int id, String line) {
-                        super.commandOutput(id, line);
-                        CLog.log("RootHelper says: " + line);
-                    }
-
-                    @Override
                     public void commandCompleted(int id, int exitCode) {
+                        super.commandCompleted(id, exitCode);
                         refreshBambooGarden();
                     }
 
@@ -364,13 +438,8 @@ public class Garden extends Activity implements BambooMessages {
                                 + bamboo.getName()) {
 
                     @Override
-                    public void commandOutput(int id, String line) {
-                        super.commandOutput(id, line);
-                        CLog.log("RootHelper says: " + line);
-                    }
-
-                    @Override
                     public void commandCompleted(int id, int exitCode) {
+                        super.commandCompleted(id, exitCode);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

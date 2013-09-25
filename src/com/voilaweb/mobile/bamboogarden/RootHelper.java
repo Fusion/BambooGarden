@@ -1,5 +1,6 @@
 package com.voilaweb.mobile.bamboogarden;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import com.stericson.RootTools.RootTools;
@@ -45,6 +46,11 @@ public class RootHelper {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                }
+            }
+            else if(args.args[0].equals("color")) {
+                if(args.args.length > 2) {
+                    updateBambooColor(args.args[1], args.args[2]);
                 }
             }
             else if(args.args[0].equals("switch")) {
@@ -107,7 +113,8 @@ public class RootHelper {
         System.out.println("OK");
         for(File bambooFile:bambooFiles) {
             String name = bambooFile.getName();
-            System.out.println(name + "," + (activeFileName.equals(name) ? "true" : "false"));
+            int color = getBambooColor(bambooFile);
+            System.out.println(name + "," + (activeFileName.equals(name) ? "true" : "false") + "," + color);
         }
         return true;
     }
@@ -189,6 +196,29 @@ public class RootHelper {
 
         linkBamboo(name);
 
+        return true;
+    }
+
+
+    private boolean updateBambooColor(String name, String colorValue) {
+        return setBambooColor(new File(DBPATH + name), Integer.parseInt(colorValue));
+    }
+
+
+    private int getBambooColor(File bambooDb) {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(DBPATH + bambooDb.getName(), null, 0);
+        Cursor cursor = db.rawQuery("SELECT cover_color FROM book", null);
+        cursor.moveToFirst();
+        int color = cursor.getInt(0);
+        db.close();
+        return color;
+    }
+
+
+    private boolean setBambooColor(File bambooDb, int color) {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(DBPATH + bambooDb.getName(), null, 0);
+        db.execSQL("UPDATE book SET cover_color=" + color);
+        db.close();
         return true;
     }
 
@@ -292,6 +322,7 @@ public class RootHelper {
     protected boolean setFileOwnerId(String filePath, int uid) {
         return (0 == nativeChownerId(filePath, uid));
     }
+
 
     protected void setDbOwnership(String dbName) throws IOException {
         int ownerId = getBambooOwnerId();

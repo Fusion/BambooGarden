@@ -3,7 +3,6 @@
     <string name="app_name">BambooGarden</string>
 
     <string name="deletebookbutton">Delete</string>
-    <string name="two">nothing yet</string>
-    <string name="three">nothing yet</string>
+    <string name="colorbookbutton">Color</string>
 
 </resources>

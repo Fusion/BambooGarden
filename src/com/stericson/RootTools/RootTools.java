@@ -77,7 +77,7 @@ public final class RootTools {
     // # Public Variables #
     // --------------------
 
-    public static boolean debugMode = true;
+    public static boolean debugMode = false;
     public static List<String> lastFoundBinaryPaths = new ArrayList<String>();
     public static String utilPath;
 
@@ -749,7 +749,7 @@ public final class RootTools {
      * }
      *
      *
-     * @return true is logging is enabled
+     * @return true if logging is enabled
      */
     public static boolean islog() {
         return debugMode;
@@ -771,8 +771,8 @@ public final class RootTools {
      * @param e    The exception that was thrown (Needed for errors)
      */
     public static void log(String TAG, String msg, int type, Exception e) {
-        if (debugMode) {
-            if (msg != null && !msg.equals("")) {
+        if (msg != null && !msg.equals("")) {
+            if (debugMode) {
                 if (TAG == null) {
                     TAG = Constants.TAG;
                 }

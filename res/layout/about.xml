@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:stretchColumns="*">
+	<TableRow>
+		<ImageView 
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content" 
+	    	android:src="@drawable/icon"
+	    	android:layout_gravity="left|center"/>
+		<TextView
+			android:id="@+id/info_text"
+			android:gravity="center"
+			android:layout_gravity="center"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent" />
+	</TableRow>
+	<TableRow>
+        <Button
+                android:id="@+id/button_credits"
+                android:text="(Credits)"
+                android:textSize="14sp"
+                android:textColor="@color/credits_text_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:background="@null"
+                style="@style/RetroButton"
+                />
+	</TableRow>
+</TableLayout>

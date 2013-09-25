@@ -17,10 +17,11 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
     public boolean process(Set<? extends TypeElement> typeElements, RoundEnvironment roundEnvironment) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "I was invoked!!!");
 
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
     */
 
+    static String PATH_TO_DX = "/Users/Chris/Projects/android-sdk-macosx/build-tools/18.0.1/dx";
     enum READ_STATE { STARTING, FOUND_ANNOTATION; };
 
     public RootClass(String[] args) throws ClassNotFoundException, NoSuchMethodException,
@@ -128,7 +129,7 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
                 }
                 else {
                     cmd = new String[] {
-                            "/Users/Chris/Projects/android-sdk-macosx/build-tools/18.0.1/dx",
+                            PATH_TO_DX,
                             "--dex",
                             "--output=anbuild.dex",
                             "anbuild.jar"
