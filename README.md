@@ -92,3 +92,7 @@ Yes it is. Oh, wait. You mean it does not include the proper acknowledgments for
  
 You're right. I need to get around to doing it. Note that the app doesn't even have an 'About' box at this point :/
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Fusion/bamboogarden/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
